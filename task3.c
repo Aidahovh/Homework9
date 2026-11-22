@@ -1,28 +1,27 @@
+
 #include <stdio.h>
 #include <pthread.h>
-#include <unistd.h>
 
-#define NUM_THREADS 3
-
-void *print_numbers(void *arg) {
-    int id = *(int *)arg;
+void *printNumbers(void *arg) {
     for (int i = 1; i <= 5; i++) {
-        printf("Thread %d: %d\n", id, i);
-        usleep(1000); /* small delay so interleaving is visible */
+        printf("Thread %lu: %d\n",
+               (unsigned long)pthread_self(), i);
     }
+
     return NULL;
 }
 
-int main(void) {
-    pthread_t th[NUM_THREADS];
-    int ids[NUM_THREADS];
+int main() {
+    pthread_t threads[3];
 
-    for (int i = 0; i < NUM_THREADS; i++) {
-        ids[i] = i + 1;
-        pthread_create(&th[i], NULL, print_numbers, &ids[i]);
+    for (int i = 0; i < 3; i++) {
+        pthread_create(&threads[i], NULL, printNumbers, NULL);
     }
-    for (int i = 0; i < NUM_THREADS; i++)
-        pthread_join(th[i], NULL);
+
+    for (int i = 0; i < 3; i++) {
+        pthread_join(threads[i], NULL);
+    }
 
     return 0;
 }
+

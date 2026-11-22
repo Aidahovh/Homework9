@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-#define SIZE 10
-
-int arr[SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 typedef struct { int start, end, id; long sum; } Task;
 
@@ -17,8 +15,9 @@ void *partial_sum(void *arg) {
 }
 
 int main(void) {
+    int size = sizeof(arr) / sizeof(arr[0]);
     pthread_t th[2];
-    Task tasks[2] = {{0, SIZE / 2, 1, 0}, {SIZE / 2, SIZE, 2, 0}};
+    Task tasks[2] = {{0, size / 2, 1, 0}, {size / 2, size, 2, 0}};
 
     for (int i = 0; i < 2; i++)
         pthread_create(&th[i], NULL, partial_sum, &tasks[i]);
